@@ -1,0 +1,13 @@
+{
+  "timezone": "Europe/Moscow",
+  "services": [
+    {"id": "cut", "name": "Стрижка и форма", "duration": 60, "price": 2400, "category": "Форма", "description": "Стрижка и лёгкая укладка — для нового ритма и привычного комфорта."},
+    {"id": "color", "name": "Окрашивание", "duration": 120, "price": 5200, "category": "Цвет", "description": "Демонстрационный сеанс окрашивания с консультацией по оттенку."},
+    {"id": "care", "name": "Уход для волос", "duration": 30, "price": 1600, "category": "Уход", "description": "Небольшая пауза: уход и бережное завершение образа."}
+  ],
+  "staff": [
+    {"id": "anna", "name": "Анна", "role": "Стрижка, цвет и уход", "initials": "А", "services": ["cut", "color", "care"]},
+    {"id": "maria", "name": "Мария", "role": "Стрижка и уход", "initials": "М", "services": ["cut", "care"]},
+    {"id": "eva", "name": "Ева", "role": "Цвет и уход", "initials": "Е", "services": ["color", "care"]}
+  ]
+}

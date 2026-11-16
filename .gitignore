@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.sqlite*
+*.db*
+.env
+.env.*
+!.env.example
+node_modules/
+.DS_Store
+coverage/
+test-results/
+playwright-report/
+runtime/

@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-15T23:37:58.546Z",
+  "mode": "static",
+  "url": "http://127.0.0.1:54147/studio-booking-demo/?demo=1",
+  "checks": [
+    "Desktop, repository subpath and clear browser-only notice",
+    "Service/staff compatibility and stale slot selection cleared",
+    "Create → reload → move → cancel, with text-safe names",
+    "Admin filters, cancel, reset confirmation and keyboard Escape",
+    "24 competing creates in two tabs: exactly one overlapping interval",
+    "Adjacent/different staff allowed; concurrent moves preserve losing booking",
+    "Validation and failed move leave original data intact",
+    "Responsive 390px and reduced motion",
+    "Responsive 375px and reduced motion",
+    "Responsive 820px and reduced motion",
+    "No static API traffic or uncaught errors",
+    "Unavailable storage and missing local backend fail explicitly"
+  ],
+  "uncaughtErrors": []
+}

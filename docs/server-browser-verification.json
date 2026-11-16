@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-15T23:39:11.058Z",
+  "checks": [
+    "Local server mode loads with explicit shared SQLite storage",
+    "Lost POST response retries with same key and recovers one booking with owner access",
+    "Owner reference persists across page reload",
+    "Another browser has no owner records and direct GET without token is denied",
+    "Admin UI rejects wrong key and accepts server-validated key",
+    "Authenticated admin moves and cancels booking through real API",
+    "Owner sees admin change; logout hides admin data"
+  ],
+  "uncaughtErrors": []
+}

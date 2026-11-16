@@ -1,0 +1,17 @@
+{
+  "name": "liniya-studio-booking-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Учебный сервис записи: браузерная демонстрация и отдельный Python/SQLite сервер",
+  "scripts": {
+    "check": "node tests/check-static.mjs",
+    "test": "python3 -m unittest discover -s tests -p 'test_*.py' -v",
+    "test:browser": "node tests/browser.mjs",
+    "test:server-ui": "node tests/server-browser.mjs",
+    "start": "python3 server/app.py",
+    "preview": "python3 -m http.server 8762 --bind 127.0.0.1 --directory public"
+  },
+  "devDependencies": {"playwright": "1.65.0"},
+  "engines": {"node": ">=20"}
+}

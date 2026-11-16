@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {spawn} from 'node:child_process';
+import {randomBytes} from 'node:crypto';
+import {mkdtemp,rm,writeFile,mkdir} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const require=createRequire(import.meta.url);
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const temp=await mkdtemp(path.join(tmpdir(),'liniya-ui-'));
+const adminKey=randomBytes(32).toString('hex');
+const child=spawn('python3',['server/app.py','--port','0','--db',path.join(temp,'qa.sqlite3')],{cwd:root,env:{...process.env,STUDIO_ADMIN_TOKEN:adminKey},stdio:['ignore','pipe','pipe']});
+const checks=[],errors=[];let browser;
+try{
+  const url=await new Promise((resolve,reject)=>{let output='';const timeout=setTimeout(()=>reject(Error('Server startup timeout')),10000);child.stdout.on('data',d=>{output+=d;const match=output.match(/http:\/\/127\.0\.0\.1:\d+/);if(match){clearTimeout(timeout);resolve(match[0]);}});child.once('error',reject);child.once('exit',code=>{clearTimeout(timeout);reject(Error('Server exited '+code));});});
+  browser=await chromium.launch({headless:true});const c=await browser.newContext({viewport:{width:1280,height:900}});const p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));await p.goto(url);await p.locator('[data-time="10:00"]').waitFor();
+  assert.match(await p.locator('#mode-badge').innerText(),/Локальный сервер/);checks.push('Local server mode loads with explicit shared SQLite storage');
+  const keys=[];let loseResponse=true;
+  await p.route('**/api/bookings',async route=>{if(route.request().method()!=='POST')return route.continue();keys.push(route.request().headers()['idempotency-key']);if(loseResponse){loseResponse=false;await route.fetch();return route.abort('failed');}return route.continue();});
+  await p.locator('[data-time="10:00"]').click();await p.locator('#client-name').fill('Демо Сервер');await p.locator('#submit-booking').click();await p.locator('#action-dialog[open]').waitFor();assert.equal(keys.length,2);assert(keys[0]&&keys[0]===keys[1]);await p.locator('#dialog-submit').click();await p.locator('#mine-list .record').waitFor();assert.equal(await p.locator('#mine-list .record').count(),1);checks.push('Lost POST response retries with same key and recovers one booking with owner access');
+  await p.reload();await p.locator('#mine-list .record').waitFor();checks.push('Owner reference persists across page reload');
+  const outsider=await browser.newContext();const q=await outsider.newPage();await q.goto(url+'/#mine');await q.locator('#mine-view').waitFor({state:'visible'});assert.equal(await q.locator('#mine-list .record').count(),0);
+  const refs=await p.evaluate(()=>JSON.parse(localStorage.getItem('liniya-server-refs-v1')));const denied=await outsider.request.get(url+'/api/bookings/'+refs[0].id);assert([401,403].includes(denied.status()));checks.push('Another browser has no owner records and direct GET without token is denied');
+  await p.locator('[data-view="admin"]').click();await p.locator('#admin-login').waitFor({state:'visible'});await p.locator('#admin-token').fill('incorrect-demo-key-xxxxxxxx');await p.locator('#admin-login-form button').click();await p.locator('#notice.error').waitFor();assert(await p.locator('#admin-login').isVisible());assert(!(await p.locator('#admin-content').isVisible()));
+  await p.locator('#admin-token').fill(adminKey);await p.locator('#admin-login-form button').click();await p.locator('#admin-list .record').waitFor();assert.equal(await p.locator('#admin-list .record').count(),1);checks.push('Admin UI rejects wrong key and accepts server-validated key');
+  await p.locator('#admin-list [data-action="move"]').click();await p.locator('[data-move-time="12:00"]').waitFor();await p.locator('[data-move-time="12:00"]').click();await p.locator('#dialog-submit').click();await p.locator('#action-dialog').waitFor({state:'hidden'});
+  await p.locator('#admin-list .record').filter({hasText:'12:00'}).waitFor({state:'visible'});
+  assert.match(await p.locator('#admin-list').innerText(),/12:00/);
+  await p.locator('#admin-list [data-action="cancel"]').click();await p.locator('#dialog-submit').click();await p.locator('#action-dialog').waitFor({state:'hidden'});
+  await p.locator('#admin-list .record-status').filter({hasText:'Отменено'}).waitFor({state:'visible'});
+  assert.match(await p.locator('#admin-list').innerText(),/Отменено/);checks.push('Authenticated admin moves and cancels booking through real API');
+  await p.locator('#admin-logout').click();await p.locator('#admin-login').waitFor({state:'visible'});await p.locator('[data-view="mine"]').click();await p.locator('#mine-list .record').waitFor();assert.match(await p.locator('#mine-list').innerText(),/Отменено/);checks.push('Owner sees admin change; logout hides admin data');assert.deepEqual(errors,[]);
+  await mkdir(path.join(root,'docs'),{recursive:true});await writeFile(path.join(root,'docs','server-browser-verification.json'),JSON.stringify({date:new Date().toISOString(),checks,uncaughtErrors:errors},null,2)+'\n');for(const check of checks)console.log('PASS '+check);await outsider.close();await c.close();
+}finally{await browser?.close();child.kill('SIGTERM');await new Promise(resolve=>{if(child.exitCode!==null)resolve();else child.once('exit',resolve);});await rm(temp,{recursive:true,force:true});}
