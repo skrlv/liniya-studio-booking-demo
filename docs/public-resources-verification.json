@@ -1,0 +1,69 @@
+{
+  "checked_at": "2026-11-16T00:27:00.566829+00:00",
+  "repository": "skrlv/liniya-studio-booking-demo",
+  "deployment_commit": "c422e099c6b36ae0c964598f8d47cf41fea02311",
+  "workflow_run": "https://github.com/skrlv/liniya-studio-booking-demo/actions/runs/43780269973",
+  "checks": [
+    {
+      "file": "app.js",
+      "url": "https://skrlv.github.io/liniya-studio-booking-demo/app.js",
+      "http_status": 200,
+      "sha256": "84fd375d76cde5bfa222240afcc720fc5cbf60b3a60a2e01373afabfb3a5f2fe"
+    },
+    {
+      "file": "catalog.json",
+      "url": "https://skrlv.github.io/liniya-studio-booking-demo/catalog.json",
+      "http_status": 200,
+      "sha256": "fbab92b565a0aa54cf34910bba93153a5a1537a25b0e1b6412e644ac3d59120f"
+    },
+    {
+      "file": "data.js",
+      "url": "https://skrlv.github.io/liniya-studio-booking-demo/data.js",
+      "http_status": 200,
+      "sha256": "c6f01c6ed511cdaad49a0dff037428021368b188bddf902935809b1d585b746d"
+    },
+    {
+      "file": "favicon.svg",
+      "url": "https://skrlv.github.io/liniya-studio-booking-demo/favicon.svg",
+      "http_status": 200,
+      "sha256": "7cd93d33e35162441625be64693054da44dac5603545269cd7f6fa99220cafcd"
+    },
+    {
+      "file": "index.html",
+      "url": "https://skrlv.github.io/liniya-studio-booking-demo/",
+      "http_status": 200,
+      "sha256": "1c44f809ad2e7077e4a641788f2ea5830ed1247fcaac21a0cee8bd144d810c1b"
+    },
+    {
+      "file": "styles.css",
+      "url": "https://skrlv.github.io/liniya-studio-booking-demo/styles.css",
+      "http_status": 200,
+      "sha256": "702597c4f410aa6310b116159cb158b8afde95f46cc7401188bc7da6db8fe54f"
+    },
+    {
+      "path": "api/catalog",
+      "http_status": 404,
+      "expected": "not in Pages artifact"
+    },
+    {
+      "path": "server/app.py",
+      "http_status": 404,
+      "expected": "not in Pages artifact"
+    },
+    {
+      "path": "runtime/studio.sqlite3",
+      "http_status": 404,
+      "expected": "not in Pages artifact"
+    },
+    {
+      "path": ".env",
+      "http_status": 404,
+      "expected": "not in Pages artifact"
+    },
+    {
+      "path": "README.md",
+      "http_status": 404,
+      "expected": "not in Pages artifact"
+    }
+  ]
+}

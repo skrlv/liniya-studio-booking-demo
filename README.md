@@ -2,7 +2,7 @@
 
 Учебный сервис помогает выбрать услугу, специалиста и свободное время, а затем перенести или отменить запись.
 
-**Версия 1.0.0, 16 ноября 2026.** Браузерная демонстрация и отдельный локальный сервер реализованы и проверены. Публичная версия пока **не опубликована**: требуется создание отдельного репозитория и включение GitHub Pages. Планируемое имя — `skrlv/liniya-studio-booking-demo`; адрес не является подтверждённой ссылкой.
+**Версия 1.0.0, 16 ноября 2026.** [Публичная демонстрация](https://skrlv.github.io/liniya-studio-booking-demo/) опубликована через GitHub Pages, основной сценарий проверен на этом адресе. [Исходный репозиторий](https://github.com/skrlv/liniya-studio-booking-demo). Отдельный локальный сервер также реализован и проверен; на Pages он не запускается.
 
 ## Что можно проверить
 
@@ -99,10 +99,10 @@ npm run test:server-ui
 Проверка опубликованной версии после развёртывания:
 
 ```sh
-DEMO_URL='https://skrlv.github.io/liniya-studio-booking-demo/' npm run test:browser
+DEMO_URL='https://skrlv.github.io/liniya-studio-booking-demo/' EVIDENCE_DIR='../public-verification' npm run test:browser
 ```
 
-Эта команда пока не выполнялась: публикация ожидается. Снимки текущей локальной версии находятся в `docs/preview-*.png`.
+Публичный прогон выполнен 16.11.2026: 11 групп прошли, ошибок JavaScript нет. Проверены создание, перезагрузка, перенос, отмена, админка, конкуренция двух вкладок и ширины 1440/820/390/375 px. Его протокол — [public-browser-verification.json](docs/public-browser-verification.json). Двенадцатая группа локального сценария проверяет ошибку localhost и в публичном прогоне намеренно пропускается. Отдельный `EVIDENCE_DIR` сохраняет новые снимки, не перезаписывая исходные `docs/preview-*.png`.
 
 ## Структура и API
 
@@ -120,9 +120,9 @@ API: `GET /api/catalog`, `GET /api/slots`, `POST /api/bookings`, `GET/PATCH/DELE
 
 ## Публикация
 
-Комплект рассчитан на отдельный репозиторий `liniya-studio-booking-demo`, ветку `main`, Settings → Pages → Source: **GitHub Actions**. Workflow проверяет сервер, статические пути и браузерные сценарии, загружает только `public/` и развёртывает официальный Pages artifact. Пути `./…` работают под базовым путём `/liniya-studio-booking-demo/`.
+Отдельный публичный репозиторий — `skrlv/liniya-studio-booking-demo`, ветка `main`, Settings → Pages → Source: **GitHub Actions**. Workflow проверяет сервер, статические пути и браузерные сценарии, загружает только `public/` и развёртывает официальный Pages artifact. Пути `./…` проверены под базовым путём `/liniya-studio-booking-demo/`.
 
-Использованы официальные действия `actions/configure-pages@v5`, `actions/upload-pages-artifact@v4`, `actions/deploy-pages@v4` согласно [документации GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages), проверенной 16.11.2026. Наличие workflow не означает успешный деплой. Публичный URL и Actions пока не проверены, потому что репозиторий ещё не создан.
+Использованы официальные действия `actions/configure-pages@v5`, `actions/upload-pages-artifact@v4`, `actions/deploy-pages@v4` согласно [документации GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages), проверенной 16.11.2026. [Первая успешная публикация](https://github.com/skrlv/liniya-studio-booking-demo/actions/runs/43780269973) соответствует коммиту `c422e099c6b36ae0c964598f8d47cf41fea02311`. SHA256 всех шести публичных файлов совпали с локальными; серверные и приватные пути вернули 404. Подробности — [PUBLICATION.md](docs/PUBLICATION.md), текущие сборки — [Actions](https://github.com/skrlv/liniya-studio-booking-demo/actions/workflows/pages.yml).
 
 ## Материалы и лицензии
 
